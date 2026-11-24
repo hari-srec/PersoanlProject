@@ -1,6 +1,6 @@
 # BakeFlow – Architecture Decision Records (ADR Log)
 
-> **Step:** 1.1 · **Status:** All decisions below are **Accepted** · **Source:** Phase 1.1 prompt, [master-prompt.md](../master-prompt.md) Appendix C
+> **Steps:** 1.1 (ADR-001 – 015, Accepted) · 1.2 (ADR-016 – 034, Proposed until owner review) · **Source:** Phase 1.1 prompt, [master-prompt.md](../master-prompt.md) Appendix C
 
 ## Table of Contents
 
@@ -21,7 +21,26 @@
 15. [ADR-013 – Expiry validated at allocation time, not only by scheduled jobs](#adr-013--expiry-validated-at-allocation-time-not-only-by-scheduled-jobs)
 16. [ADR-014 – Discounts stored separately; original price never modified](#adr-014--discounts-stored-separately-original-price-never-modified)
 17. [ADR-015 – Append-only stock movement ledger for every quantity change](#adr-015--append-only-stock-movement-ledger-for-every-quantity-change)
-18. [How to Add a New ADR](#how-to-add-a-new-adr)
+17. [ADR-016 – Spring Boot 4.1.x on Java 21 LTS](#adr-016--spring-boot-41x-on-java-21-lts)
+18. [ADR-017 – Dependency version policy](#adr-017--dependency-version-policy)
+19. [ADR-018 – Maven with the Maven Wrapper](#adr-018--maven-with-the-maven-wrapper)
+20. [ADR-019 – MySQL 8.4 LTS](#adr-019--mysql-84-lts)
+21. [ADR-020 – Package-by-module structure enforced by Spring Modulith and ArchUnit](#adr-020--package-by-module-structure-enforced-by-spring-modulith-and-archunit)
+22. [ADR-021 – No Lombok; Java records for DTOs](#adr-021--no-lombok-java-records-for-dtos)
+23. [ADR-022 – MapStruct for DTO mapping](#adr-022--mapstruct-for-dto-mapping)
+24. [ADR-023 – JWT with Spring Security Resource Server (Nimbus), not JJWT](#adr-023--jwt-with-spring-security-resource-server-nimbus-not-jjwt)
+25. [ADR-024 – Token storage in the browser and same-origin deployment](#adr-024--token-storage-in-the-browser-and-same-origin-deployment)
+26. [ADR-025 – ShedLock for scheduled jobs](#adr-025--shedlock-for-scheduled-jobs)
+27. [ADR-026 – Single React SPA built with Vite, not Next.js](#adr-026--single-react-spa-built-with-vite-not-nextjs)
+28. [ADR-027 – Frontend data layer: TanStack Query, Axios, React Hook Form, Zod; no Redux](#adr-027--frontend-data-layer-tanstack-query-axios-react-hook-form-zod-no-redux)
+29. [ADR-028 – REST API conventions](#adr-028--rest-api-conventions)
+30. [ADR-029 – Database naming conventions and Flyway versioning](#adr-029--database-naming-conventions-and-flyway-versioning)
+31. [ADR-030 – Redis for caching only, introduced in Phase 4](#adr-030--redis-for-caching-only-introduced-in-phase-4)
+32. [ADR-031 – File storage behind an interface; local disk first](#adr-031--file-storage-behind-an-interface-local-disk-first)
+33. [ADR-032 – Invoice printing: browser print first, server PDF later](#adr-032--invoice-printing-browser-print-first-server-pdf-later)
+34. [ADR-033 – Email via Spring Mail; Mailpit in development](#adr-033--email-via-spring-mail-mailpit-in-development)
+35. [ADR-034 – Razorpay integration through the official Java SDK behind PaymentGateway](#adr-034--razorpay-integration-through-the-official-java-sdk-behind-paymentgateway)
+36. [How to Add a New ADR](#how-to-add-a-new-adr)
 
 ---
 
@@ -40,20 +59,39 @@ Where the architect has a concern about an accepted decision, it is written unde
 | ID | Title | Status | Related requirements | Concern raised |
 |----|-------|--------|----------------------|----------------|
 | ADR-001 | Modular monolith architecture | Accepted | NFR-42, NFR-35 | – |
-| ADR-002 | Batch-level inventory with FEFO allocation | Accepted | BR-03, BR-04 | OQ-15, OQ-17 |
+| ADR-002 | Batch-level inventory with FEFO allocation | Accepted | BR-03, BR-04 | OQ-15, OQ-17 (resolved) |
 | ADR-003 | Flyway for all schema changes; ddl-auto=validate | Accepted | NFR-25 | – |
 | ADR-004 | DECIMAL(12,2) / BigDecimal for money | Accepted | NFR-23 | – |
 | ADR-005 | UTC storage, Asia/Kolkata display | Accepted | NFR-48 | – |
-| ADR-006 | GST support (HSN, rate, CGST/SGST/IGST) | Accepted | FR-BR-24, FR-ADM-06 | OQ-16 |
+| ADR-006 | GST support (HSN, effective-dated rates, CGST/SGST/IGST) | Accepted (amended 1.1 review) | FR-BR-24, FR-ADM-06 | OQ-01, OQ-16 (resolved) |
 | ADR-007 | Razorpay payment gateway (test mode in dev) | Accepted | FR-CUS-14, NFR-18 | – |
-| ADR-008 | Pessimistic locking + @Version on batches | Accepted | BR-09, BR-12, BR-13, NFR-26–28 | OQ-22 |
+| ADR-008 | Pessimistic locking + @Version on batches | Accepted | BR-09, BR-12, BR-13, NFR-26–28 | OQ-22 (resolved: keep both) |
 | ADR-009 | Separate staff-user and customer tables | Accepted | BR-14 | – |
-| ADR-010 | Gap-free invoice numbering per branch per FY | Accepted | NFR-24 | **OQ-02** |
+| ADR-010 | Gap-free invoice numbering per branch per FY | Accepted (amended 1.1 review) | NFR-24 | OQ-02 (resolved: `ANN/2627/000123`) |
 | ADR-011 | Idempotency-Key for billing and payment APIs | Accepted | NFR-11 | – |
 | ADR-012 | Cart ≠ reservation; time-limited reservation at checkout | Accepted | BR-09, BR-10 | – |
 | ADR-013 | Expiry validated at allocation time | Accepted | BR-05 | – |
 | ADR-014 | Discounts stored separately | Accepted | BR-07 | – |
 | ADR-015 | Append-only stock movement ledger | Accepted | BR-08, NFR-22 | – |
+| ADR-016 | Spring Boot 4.1.x on Java 21 LTS | Proposed | NFR-16, NFR-44 | OQ-24, OQ-25 |
+| ADR-017 | Dependency version policy | Proposed | NFR-16, NFR-44 | – |
+| ADR-018 | Maven with the Maven Wrapper | Proposed | NFR-44 | – |
+| ADR-019 | MySQL 8.4 LTS | Proposed | NFR-09, NFR-21 | – |
+| ADR-020 | Package-by-module structure enforced by Spring Modulith and ArchUnit | Proposed | NFR-42 | – |
+| ADR-021 | No Lombok; Java records for DTOs | Proposed | NFR-41 | – |
+| ADR-022 | MapStruct for DTO mapping | Proposed | NFR-38 | – |
+| ADR-023 | JWT with Spring Security Resource Server (Nimbus), not JJWT | Proposed | NFR-14, BR-14 | – |
+| ADR-024 | Token storage in the browser and same-origin deployment | Proposed | NFR-14, NFR-17 | – |
+| ADR-025 | ShedLock for scheduled jobs | Proposed | NFR-07, NFR-35 | – |
+| ADR-026 | Single React SPA built with Vite, not Next.js | Proposed | NFR-03, NFR-37 | – |
+| ADR-027 | Frontend data layer: TanStack Query, Axios, React Hook Form, Zod; no Redux | Proposed | NFR-36, NFR-37 | – |
+| ADR-028 | REST API conventions | Proposed | NFR-38, NFR-43, NFR-11 | – |
+| ADR-029 | Database naming conventions and Flyway versioning | Proposed | NFR-21, NFR-23, NFR-25 | – |
+| ADR-030 | Redis for caching only, introduced in Phase 4 | Proposed | NFR-03, NFR-12 | – |
+| ADR-031 | File storage behind an interface; local disk first | Proposed | AS-34 | – |
+| ADR-032 | Invoice printing: browser print first, server PDF later | Proposed | NFR-40, FR-BR-24 | – |
+| ADR-033 | Email via Spring Mail; Mailpit in development | Proposed | AS-58, FR-CUS-03 | – |
+| ADR-034 | Razorpay integration through the official Java SDK behind PaymentGateway | Proposed | FR-CUS-14, NFR-18 | – |
 
 ---
 
@@ -84,8 +122,8 @@ Where the architect has a concern about an accepted decision, it is written unde
 - **Consequences:**
   - ✅ Exact knowledge of what expires when; enables discounts, alerts and wastage per batch.
   - ⚠️ One sale line may map to several batches, so sale and order lines need a line-to-batch allocation detail.
-  - ⚠️ **Concern:** when one line draws from a discounted and a full-price batch, pricing must be split. Recommendation: split invoice lines per batch and price (**OQ-15**).
-  - ⚠️ **Concern:** the system's FEFO choice may differ from the item physically handed over (**L-02, OQ-17**).
+  - ⚠️ **Concern:** when one line draws from a discounted and a full-price batch, pricing must be split. **Resolved (OQ-15):** invoice lines are split per batch and price (AS-56).
+  - ⚠️ **Concern:** the system's FEFO choice may differ from the item physically handed over (**L-02**). **Resolved (OQ-17):** system FEFO plus shelf practice in the MVP (AS-57).
 
 ## ADR-003 – Flyway for all schema changes; Hibernate ddl-auto=validate
 
@@ -124,21 +162,23 @@ Where the architect has a concern about an accepted decision, it is written unde
 - **Consequences:**
   - ✅ Unambiguous times, safe server placement.
   - ⚠️ Daily boundaries must be converted: the IST day 25-Nov runs from 24-Nov 18:30 UTC to 25-Nov 18:30 UTC. Reports and FY logic must use a shared helper.
-  - ⚠️ MySQL `DATETIME` has no time zone, so the UTC convention must be enforced in configuration and tested. Column type (`DATETIME(3)` vs `TIMESTAMP`) is decided in step 1.3.
+  - ⚠️ MySQL `DATETIME` has no time zone, so the UTC convention must be enforced in configuration and tested. **Decided in step 1.2:** columns use `DATETIME(6)` holding UTC values ([coding-conventions.md](../01-technology-stack/coding-conventions.md#43-data-types)).
 
 ## ADR-006 – GST support on products and invoices
 
 - **Status:** Accepted
 - **Context:** Indian retail sales need GST invoices. Bakery items have different HSN codes and GST rates.
-- **Decision:** Each product (variant) stores an **HSN code** and **GST rate**. Each invoice line stores a **snapshot** of HSN, rate, taxable value and **CGST, SGST and IGST amounts**, so later rate changes never alter old invoices. The invoice stores totals per tax component and the organization's GSTIN.
+- **Decision:** Each product variant references an **HSN code**. GST rates are stored **per HSN code with effective dates** (`effective_from`, optional `effective_to`), so the rate applied to a sale is the one in force at the time of sale. **Rates are never hard-coded**; when the government changes a rate, the admin adds a new effective-dated rate. Each invoice line stores a **snapshot** of HSN, rate, taxable value and **CGST, SGST and IGST amounts**, so later rate changes never alter old invoices. The invoice stores totals per tax component and the organization's GSTIN. *(Amended in the step 1.1 review, OQ-01.)*
 - **Alternatives considered:**
   - *Tax only at invoice level:* cannot handle mixed-rate bills.
   - *Look up current rates at reporting time:* wrong when rates change.
   - *No GST in the MVP:* invoices would not be legally usable.
 - **Consequences:**
   - ✅ Legally structured invoices; correct tax reports per rate.
-  - ⚠️ **Concern:** all branches are expected to be in Tamil Nadu (AS-03), so every sale is intra-state (CGST + SGST). IGST columns exist but stay zero in the MVP. Supporting IGST properly would need place-of-supply logic.
-  - ⚠️ **Concern:** the design assumes a regular GST registration. A composition-scheme business issues a "bill of supply" without GST (**OQ-16**).
+  - ✅ Rate changes need no code change or deployment; history stays correct.
+  - ⚠️ All branches are in Tamil Nadu (AS-03, confirmed), so every sale is intra-state (CGST + SGST). IGST columns exist but stay zero in the MVP. Supporting IGST properly would need place-of-supply logic.
+  - ⚠️ **Resolved (OQ-16):** regular GST registration, a single GSTIN in Tamil Nadu, an invoice series per branch (AS-04).
+  - ⚠️ Rate lookup must use the IST business date of the sale (ADR-005), and overlapping effective periods for the same HSN code must be rejected.
   - ⚠️ BakeFlow stores rates configured by the admin; it does not decide tax law (AS-05).
 
 ## ADR-007 – Razorpay as payment gateway
@@ -169,7 +209,7 @@ Where the architect has a concern about an accepted decision, it is written unde
 - **Consequences:**
   - ✅ No overselling, proven by a concurrency test (NFR-26).
   - ⚠️ Lock waits under high contention. Mitigated by short transactions and no external calls while locked.
-  - ⚠️ **Concern (minor):** two locking mechanisms on the same row can confuse developers. Rule of thumb: pessimistic for quantity changes, `@Version` for everything else. A pessimistic update also increments the version (**OQ-22**).
+  - ⚠️ **Concern (minor):** two locking mechanisms on the same row can confuse developers. Rule of thumb: pessimistic for quantity changes, `@Version` for everything else. A pessimistic update also increments the version. **Resolved (OQ-22):** keep both mechanisms.
 
 ## ADR-009 – Separate staff-user and customer account tables
 
@@ -188,7 +228,15 @@ Where the architect has a concern about an accepted decision, it is written unde
 
 - **Status:** Accepted
 - **Context:** GST rules require invoice numbers that are consecutive and unique per financial year (series allowed). Auto-increment IDs leave gaps after a rollback and are shared across branches.
-- **Decision:** Keep a **sequence row per (branch, document type, financial year)**. When an invoice is issued, the row is locked (`SELECT … FOR UPDATE`), incremented and used **in the same transaction** as the invoice insert. A rollback therefore rolls back the number too, leaving no gap. Invoices are never deleted; corrections are made with credit notes, which have their own series (AS-37). Example format: `ANN/2026-27/000123`.
+- **Decision:** Keep a **sequence row per (branch, document type, financial year)**. When an invoice is issued, the row is locked (`SELECT … FOR UPDATE`), incremented and used **in the same transaction** as the invoice insert. A rollback therefore rolls back the number too, leaving no gap. Invoices are never deleted; corrections are made with credit notes, which have their **own separate gap-free series** (AS-37, SG-08 accepted).
+- **Format (amended in the step 1.1 review, OQ-02):**
+
+  | Document | Pattern | Example | Length |
+  |----------|---------|---------|-------:|
+  | Tax invoice | `{BRANCH}/{FY}/{6-digit counter}` | `ANN/2627/000123` | 15 |
+  | Credit note | `{BRANCH}C/{FY}/{5-digit counter}` | `ANNC/2627/00012` | 15 |
+
+  `{BRANCH}` is the 3-letter branch code; `{FY}` is the financial year as `2627` for 2026-27. **Reason:** GST rules (Rule 46 of the CGST Rules) limit an invoice serial number to **16 characters** (letters, digits, `-` and `/`). The earlier example `ANN/2026-27/000123` was 18 characters and would not have been compliant. The 6-digit counter allows 999,999 invoices per branch per year (about 2,700 a day), far above expected volume. The counter resets on 1 April (IST).
 - **Alternatives considered:**
   - *Database auto-increment:* gaps on rollback, global not per branch.
   - *Generate numbers in memory:* breaks with several instances or restarts.
@@ -196,7 +244,8 @@ Where the architect has a concern about an accepted decision, it is written unde
 - **Consequences:**
   - ✅ Legally compliant continuous series per branch.
   - ⚠️ The sequence row is a contention point per branch. Billing at one branch is serialised briefly; fine at about 2,000 bills/day.
-  - ⚠️ **Concern:** GST rules limit invoice numbers to **16 characters**. The example `ANN/2026-27/000123` is **18 characters**. Recommended compliant format: `ANN/2627/000123` (15 characters) (**OQ-02**).
+  - ✅ **Resolved (OQ-02):** the format stays within the 16-character limit.
+  - ⚠️ Branch codes must be exactly 3 letters and unique per organization, so the format never exceeds 16 characters.
 
 ## ADR-011 – Idempotency-Key header for billing and payment APIs
 
@@ -266,6 +315,170 @@ Where the architect has a concern about an accepted decision, it is written unde
 
 ---
 
+## ADR-016 – Spring Boot 4.1.x on Java 21 LTS
+
+- **Status:** Proposed (step 1.2)
+- **Context:** The brief asks for Java 21 and Spring Boot. On 24-Nov-2026: Spring Boot **3.5.x open-source support ended on 30-Jun-2026** (last release 3.5.16); **4.1.3** is the latest 4.1 patch (20-Nov-2026); **4.2.0** was released on 19-Nov-2026. springdoc-openapi 3.x, Testcontainers 2.x, Flyway (with `spring-boot-starter-flyway` + `flyway-mysql`) and Spring Modulith 2.x all target Spring Boot 4.
+- **Decision:** Use **Spring Boot 4.1.x** (pin 4.1.3 or the latest 4.1 patch at Phase 2 start) on **Java 21 LTS** (Eclipse Temurin). Upgrade to 4.2.x before Phase 5, once springdoc-openapi and Spring Modulith confirm support.
+- **Alternatives considered:**
+  - *3.5.x:* well known, but no free security patches; a later 3 → 4 migration (Jakarta EE 11, Jackson 3, Hibernate 7, Security 7) would cost more than starting on 4.
+  - *4.2.0:* newest, but too fresh for third-party libraries.
+  - *Java 25 LTS:* supported by Boot 4, but the brief specifies 21 and nothing in BakeFlow needs 25 (OQ-24).
+- **Consequences:**
+  - ✅ Supported, modern baseline for the whole project.
+  - ⚠️ Many tutorials still show Spring Boot 3 code (for example `com.fasterxml.jackson` imports, `RestTemplate`), so learning material must be checked against version 4.
+  - ⚠️ MapStruct and ShedLock compatibility must be confirmed in a Phase 2 spike.
+  - ⚠️ Open: 4.1 vs 4.2 (OQ-25) and Java 21 vs 25 (OQ-24).
+
+## ADR-017 – Dependency version policy
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Unpinned versions make builds unrepeatable. Brand-new releases sometimes have bugs or, in rare supply-chain attacks, malicious code.
+- **Decision:** Pin exact versions (Maven explicit versions; npm `save-exact` plus a committed lock file). Let the Spring Boot BOM manage the libraries it covers; override only with a documented reason. Adopt the latest stable release that has full ecosystem compatibility. Wait 14 days before adopting new releases, except for security fixes. Dependabot opens weekly update PRs. Use LTS runtimes (Java, Node, MySQL). Record each verification date in [technology-stack.md](../01-technology-stack/technology-stack.md#5-version-policy).
+- **Alternatives considered:** *version ranges or `latest`* (unrepeatable); *never upgrading* (security risk).
+- **Consequences:** ✅ Reproducible builds and controlled upgrades. ⚠️ Upgrades need regular attention (weekly Dependabot review).
+
+## ADR-018 – Maven with the Maven Wrapper
+
+- **Status:** Proposed (step 1.2)
+- **Context:** The brief specifies Maven. Different Maven versions on different machines cause "works on my machine" problems.
+- **Decision:** Use Maven, always run through the **Maven Wrapper** (`./mvnw`) committed to the repository. No global Maven installation is required.
+- **Alternatives considered:** *globally installed Maven* (version drift); *Gradle* (faster and flexible, but not required and less readable for learning).
+- **Consequences:** ✅ The same Maven version locally and in CI. ⚠️ The first run downloads Maven, which needs internet access.
+
+## ADR-019 – MySQL 8.4 LTS
+
+- **Status:** Proposed (step 1.2)
+- **Context:** The brief requires MySQL 8. **MySQL 8.0 reached end of life on 30-Apr-2026.** MySQL 8.4 is the current Long-Term Support line; 9.x releases are short-lived "Innovation" releases.
+- **Decision:** Use **MySQL 8.4 LTS** (Docker image `mysql:8.4`), InnoDB, `utf8mb4` / `utf8mb4_0900_ai_ci`.
+- **Alternatives considered:** *8.0* (end of life); *9.x Innovation* (short support windows); *PostgreSQL* (not requested).
+- **Consequences:** ✅ Years of security fixes; native arm64 images for Apple Silicon. ⚠️ 8.4 removed some legacy defaults (for example the `mysql_native_password` plugin is disabled by default), so clients must use `caching_sha2_password`, which Connector/J supports.
+
+## ADR-020 – Package-by-module structure enforced by Spring Modulith and ArchUnit
+
+- **Status:** Proposed (step 1.2)
+- **Context:** ADR-001 chose a modular monolith. Without automatic checks, module boundaries erode (NFR-42).
+- **Decision:** One top-level package per module (`com.bakeflow.<module>`), with sub-packages `api`, `application`, `domain`, `infrastructure`. The **module root package is the published interface** for other modules (facade interfaces, records, events); all sub-packages are internal. **Spring Modulith** verifies module boundaries and cycles in a test; **ArchUnit** enforces layer rules inside modules. Full rules in [coding-conventions.md §2](../01-technology-stack/coding-conventions.md#2-java-backend-structure).
+- **Alternatives considered:** *package-by-layer* (`controllers`, `services`, … across the whole app: boundaries invisible); *Maven multi-module* (hard boundaries, but more build ceremony for one developer); *ArchUnit only*.
+- **Consequences:** ✅ Boundaries are visible and tested; modules can be extracted later. ⚠️ The word `api` means the HTTP layer, while the module's published API is its root package. This is documented to avoid confusion.
+
+## ADR-021 – No Lombok; Java records for DTOs
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Lombok reduces boilerplate, but works by hooking into compiler internals. Its `@Data` and `@EqualsAndHashCode` are risky on JPA entities. Problems with Lombok on Spring Boot 4 projects have been reported.
+- **Decision:** **Do not use Lombok.** Request and response DTOs, events and value objects are **Java records**. Entities have explicit (IDE-generated) getters and only the setters or business methods they need.
+- **Alternatives considered:** *Lombok everywhere*; *Lombok for entities only*.
+- **Consequences:** ✅ No annotation-processor surprises; explicit, debuggable code; no entity `equals`/`hashCode` traps. ⚠️ Somewhat longer entity classes.
+
+## ADR-022 – MapStruct for DTO mapping
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Entities must never be returned from the API, so entity-to-DTO mapping is needed throughout.
+- **Decision:** Use **MapStruct 1.6.x** (compile-time generated mappers, Spring component model), configured so that **unmapped target properties are compile errors**. Mappers live in each module's `application` package.
+- **Alternatives considered:** *hand-written mappers* (no dependency, repetitive); *ModelMapper* (reflection-based, runtime errors).
+- **Consequences:** ✅ Fast, type-safe mapping. ⚠️ An open report of a bean-creation issue on Spring Boot 4.0.2 must be checked in the Phase 2 spike; fallback is hand-written mappers.
+
+## ADR-023 – JWT with Spring Security Resource Server (Nimbus), not JJWT
+
+- **Status:** Proposed (step 1.2)
+- **Context:** The brief requires JWT. BakeFlow both issues and validates its own tokens.
+- **Decision:** Use **Spring Security's OAuth2 Resource Server** support and its **Nimbus JOSE + JWT** encoder and decoder (`NimbusJwtEncoder`, `NimbusJwtDecoder`) for issuing and validating tokens. Sign with **HS256** and a secret of at least 256 bits from an environment variable. Claims: subject (user ID), principal type (`STAFF`/`CUSTOMER`, ADR-009), organization ID, roles, issued-at and expiry. Branch assignments are **looked up server-side**, not trusted from the token (BR-14).
+- **Alternatives considered:**
+  - *JJWT 0.13.x:* popular and simple, but an extra dependency duplicating built-in support.
+  - *RS256 (asymmetric keys):* needed only when other services validate tokens without the secret.
+  - *External identity provider (Keycloak):* too heavy for now.
+- **Consequences:** ✅ Versions managed by Spring Boot; standard Spring Security integration. ⚠️ HS256 means the same secret signs and verifies, so it must be kept out of code and rotated if leaked. Switch to RS256 if tokens are ever validated elsewhere.
+
+## ADR-024 – Token storage in the browser and same-origin deployment
+
+- **Status:** Proposed (step 1.2; security details elaborated in step 1.7)
+- **Context:** Where the SPA keeps tokens decides exposure to XSS (script injection) and CSRF (forged cross-site requests).
+- **Decision:** The **access token** (15 minutes) is held **in memory only** (JavaScript variable or React context) and sent in the `Authorization` header. The **refresh token** is an opaque random value in an **HttpOnly, Secure, SameSite=Strict cookie** scoped to the refresh endpoint path; it is stored **hashed** in MySQL and rotated on every use. The SPA and API are served from the **same origin** (Vite dev proxy locally, a reverse proxy in production), so normal operation needs no CORS. CORS stays configured with an explicit, empty-by-default allow-list.
+- **Alternatives considered:** *tokens in `localStorage`* (readable by any injected script); *everything in cookies with server sessions* (stateful, needs CSRF tokens on all writes).
+- **Consequences:** ✅ Injected scripts cannot read the refresh token; SameSite=Strict blocks cross-site use of the cookie. ⚠️ A page reload loses the in-memory access token, so the app calls `/auth/refresh` on start-up. ⚠️ The refresh endpoint must also check the `Origin` header.
+
+## ADR-025 – ShedLock for scheduled jobs
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Scheduled jobs (batch expiry, reservation release, no-show cancellation, nightly reconciliation) must not run twice at the same time once more than one backend instance is running (NFR-35).
+- **Decision:** Use **ShedLock** with its JDBC lock provider (a `shedlock` table in MySQL) on every `@Scheduled` job, from module 3.6 onward. Jobs are also written to be **idempotent**, so a repeated run causes no harm.
+- **Alternatives considered:** *no locking* (fine for one instance, unsafe later); *Quartz clustered scheduler* (heavier); *database advisory locks written by hand*.
+- **Consequences:** ✅ Safe horizontal scaling. ⚠️ ShedLock 7.x compatibility with Spring Boot 4.1 must be confirmed in the Phase 2 spike.
+
+## ADR-026 – Single React SPA built with Vite, not Next.js
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Three user areas (customer, branch, admin). Most screens are behind a login; public pages are a branch catalog.
+- **Decision:** **One** React + TypeScript SPA built with **Vite**, with three **lazy-loaded route areas** (`/shop`, `/branch`, `/admin`), so staff code is not downloaded by customers and the other way round. It is deployed as static files behind the reverse proxy.
+- **Alternatives considered:** *Next.js* (SSR and SEO, but adds a Node server and a second logic layer); *three separate SPAs* (stronger isolation, triple builds).
+- **Consequences:** ✅ Simple build and hosting; one shared design system. ⚠️ Limited SEO for public catalog pages; revisit if organic search becomes important.
+
+## ADR-027 – Frontend data layer: TanStack Query, Axios, React Hook Form, Zod; no Redux
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Most frontend state is server data; forms are central (POS, stock receipt, admin).
+- **Decision:** **TanStack Query** for all server state; **Axios** as the single HTTP client with interceptors (token, correlation ID, refresh, error conversion); **React Hook Form + Zod** for forms and validation; React context for the little global client state (current user, selected branch). **No Redux.**
+- **Alternatives considered:** *Redux Toolkit / RTK Query*; *SWR*; *Formik + Yup*; *fetch without a library*.
+- **Consequences:** ✅ Less code; consistent loading, error and caching behaviour. ⚠️ Developers must learn query keys and invalidation.
+
+## ADR-028 – REST API conventions
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Consistent APIs are easier to use, document and test. Step 1.5 needs fixed rules.
+- **Decision:** `/api/v1` prefix; plural `kebab-case` resources; branch-scoped URLs `/api/v1/branches/{branchId}/…` with server-side verification; organization taken from the token, never the URL; `camelCase` JSON; **money as decimal strings**; ISO-8601 **UTC** timestamps; `YYYY-MM-DD` business dates; zero-based pagination with a fixed page envelope; **RFC 9457 Problem Details** errors extended with `code`, `traceId` and `errors`; `Idempotency-Key` header; **404 for resources of another organization** (no existence leak). Full rules in [coding-conventions.md §5](../01-technology-stack/coding-conventions.md#5-rest-api-conventions).
+- **Alternatives considered:** *money as JSON numbers* (risk of binary floating-point rounding in JavaScript); *custom error envelope* (non-standard); *GraphQL* (more flexible queries, more complexity).
+- **Consequences:** ✅ Predictable APIs; standard error format supported by Spring. ⚠️ The frontend must parse money strings for display, and never for authoritative arithmetic.
+
+## ADR-029 – Database naming conventions and Flyway versioning
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Step 1.3 needs fixed naming and type rules. The MVP build order (MVP-A modules 3.12 and 3.16 before MVP-B modules 3.9–3.11) breaks any migration numbering tied to module numbers.
+- **Decision:** Singular `snake_case` tables; `id BIGINT` primary keys; `<table>_id` foreign keys; constraint prefixes `pk_` (documentation only, since MySQL names primary keys `PRIMARY`), `fk_`, `uk_`, `idx_`, `ck_`; standard columns `created_at`, `created_by`, `updated_at`, `updated_by`, `version`, with append-only tables keeping only the `created_*` columns; `DECIMAL(12,2)` money; `DATETIME(6)` UTC timestamps; `VARCHAR(30)` status values enforced by check constraints (no MySQL `ENUM`). Flyway files are named **`V<yyyyMMddHHmm>__<module>_<description>.sql`**. Full rules in [coding-conventions.md §4](../01-technology-stack/coding-conventions.md#4-database-conventions).
+- **Alternatives considered:** *plural table names*; *sequential migration numbers* (collide on parallel branches); *module-number versions* (out-of-order failures); *MySQL `ENUM`* (alters the table to change, sorts by position).
+- **Consequences:** ✅ Consistent schema that matches entity names. ⚠️ The 64-character identifier limit needs consistent abbreviations for long constraint names.
+
+## ADR-030 – Redis for caching only, introduced in Phase 4
+
+- **Status:** Proposed (step 1.2)
+- **Context:** The brief lists Redis. Stock correctness depends on transactions and row locks (ADR-008), which Redis cannot provide together with MySQL data.
+- **Decision:** Introduce **Redis 8** in **Phase 4** through Spring's cache abstraction and Spring Data Redis, for catalog and availability-display caching (and optionally idempotency look-ups and rate-limit counters). Redis is **never** the source of truth for stock, reservations, invoices, payments or orders, and never used for stock locks. The application must work, more slowly, if Redis is down (NFR-12).
+- **Alternatives considered:** *Redis from Phase 2* (complexity before it is needed); *Caffeine in-process cache* (simpler, but not shared across instances; may be used for small reference data); *Valkey* (BSD-licensed drop-in alternative to Redis).
+- **Consequences:** ✅ Simpler MVP; a clear rule for what may be cached. ⚠️ Cache invalidation rules must be defined in Phase 4.
+
+## ADR-031 – File storage behind an interface; local disk first
+
+- **Status:** Proposed (step 1.2; resolves AS-34)
+- **Context:** Product images must not be stored in the database (AS-34). Hosting is not chosen yet (step 1.7).
+- **Decision:** A `FileStorage` interface in `shared` with a **local-disk implementation** (a Docker volume) for development and MVP, and an **S3-compatible implementation** (AWS S3, Cloudflare R2, or MinIO for local testing) added when hosting is chosen. The database stores only the file key and metadata. Uploads are validated (image types only, size limit, re-encoded or checked).
+- **Alternatives considered:** *images in MySQL BLOBs* (bloats backups); *S3 from day one* (cloud account needed early).
+- **Consequences:** ✅ No cloud dependency during development; the swap is a configuration change. ⚠️ A local volume must be backed up and is a single point of failure until moved to object storage.
+
+## ADR-032 – Invoice printing: browser print first, server PDF later
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Counter staff need printed invoices on 80 mm thermal printers or A4 (NFR-40). Customers may later download PDF invoices (FR-CUS-25, post-MVP).
+- **Decision:** **MVP:** invoices are HTML views with **print CSS** for 80 mm and A4, printed with the browser's print dialog (the thermal printer is installed as a system printer). **Post-MVP:** server-side PDFs rendered from the same HTML template with **OpenHTMLtoPDF**.
+- **Alternatives considered:** *iText* (AGPL or commercial licence); *JasperReports* (heavy designer tooling); *ESC/POS direct printer commands* (fast, but needs a local agent or WebUSB); *client-side PDF libraries* (inconsistent output).
+- **Consequences:** ✅ No server PDF dependency in the MVP; one template for screen and paper. ⚠️ Printing goes through the browser dialog (kiosk-mode printing can be configured per counter PC).
+
+## ADR-033 – Email via Spring Mail; Mailpit in development
+
+- **Status:** Proposed (step 1.2)
+- **Context:** Password reset is in MVP-B (AS-58); notifications come later (3.15). Development must never send real emails.
+- **Decision:** Use **Spring Mail** (SMTP) behind a small `EmailSender` interface. In development and tests, emails go to **Mailpit** (SMTP on port 1025, web inbox on port 8025). The production SMTP provider is chosen in step 1.7. Emails are sent **after** the transaction commits (transactional event listener), never inside stock-locking transactions.
+- **Alternatives considered:** *a provider's HTTP API SDK directly* (ties code to one vendor); *MailHog* (unmaintained; Mailpit is its active successor).
+- **Consequences:** ✅ Safe local testing; provider-independent. ⚠️ Production deliverability (SPF, DKIM, DMARC) must be set up in step 1.7.
+
+## ADR-034 – Razorpay integration through the official Java SDK behind PaymentGateway
+
+- **Status:** Proposed (step 1.2; extends ADR-007)
+- **Context:** ADR-007 chose Razorpay. We need order creation, payment signature verification, webhook signature verification and refunds.
+- **Decision:** Use the official **`razorpay-java`** SDK, wrapped by BakeFlow's `PaymentGateway` interface in the `payment` module. Signatures are verified with the SDK's utilities. In tests, Razorpay's HTTP API is replaced by **WireMock**. Keys come from environment variables (test keys in development).
+- **Alternatives considered:** *calling the REST API with `RestClient`* (full control, more code); *a third-party wrapper library*.
+- **Consequences:** ✅ Less code; officially maintained signature checks. ⚠️ The SDK brings its own HTTP and JSON libraries, so check for dependency conflicts when it is added (module 3.10).
+
+---
+
 ## How to Add a New ADR
 
 1. Copy the structure of an existing ADR and use the next number (ADR-016 …).
@@ -273,4 +486,4 @@ Where the architect has a concern about an accepted decision, it is written unde
 3. When agreed, change it to **Accepted** and add it to the index.
 4. To change an earlier decision, write a new ADR and mark the old one `Superseded by ADR-xxx`. Never delete ADRs.
 
-**Expected upcoming ADRs (step 1.2 onward):** frontend structure (one React app vs separate apps), JWT storage strategy in the browser, image storage, module boundary testing tool, caching strategy (Phase 4), async event mechanism (Phase 4).
+**Expected upcoming ADRs:** async event mechanism details (Phase 4), hosting platform (step 1.7).

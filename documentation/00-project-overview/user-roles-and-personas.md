@@ -1,6 +1,6 @@
 # BakeFlow – User Roles and Personas
 
-> **Step:** 1.1 · **Status:** Draft for owner review · **Source:** [master-prompt.md](../master-prompt.md) §1, §3.H
+> **Step:** 1.1 (owner-reviewed) · **Source:** [master-prompt.md](../master-prompt.md) §1, §3.H
 
 ## Table of Contents
 
@@ -78,7 +78,7 @@ A role decides **what** a user can do. The scope decides **which data** they can
 |--------|--------|
 | **Who** | Cashiers, counter staff, bakers and packers. |
 | **Scope** | Branch (assigned branch only) |
-| **Responsibilities** | Create POS bills and record payments (FR-BR-20, 21). Apply discounts within the staff limit (FR-BR-22). Record production (FR-BR-15) and stock receipts (FR-BR-05). Record wastage (FR-BR-29, 30). Request adjustments (FR-BR-11). Fulfil online orders (FR-BR-35). View batches, stock history and alerts (FR-BR-06, 07, 12, 14). |
+| **Responsibilities** | Create POS bills and record payments (FR-BR-20, 21). Apply discounts within the staff limit (FR-BR-22). Record production (FR-BR-15) and stock receipts (FR-BR-05). Record wastage (FR-BR-29, 30). Record adjustments (FR-BR-11); decreases above 5 units / ₹500 wait for manager approval. Fulfil online orders (FR-BR-35). View batches, stock history and alerts (FR-BR-06, 07, 12, 14). |
 | **Does not** | Refund, approve, change prices, manage staff or see revenue reports. |
 
 ### 3.5 CUSTOMER – Online shopper
@@ -153,7 +153,7 @@ Legend: ✅ full · 🔹 limited (see note) · 👁 view only · — no access
 | Branch price override (future) | — | ✅ | 🔹 within band | — | — |
 | Record production / stock receipt | — | 🔹 | ✅ | ✅ | — |
 | View batches & stock ledger | 👁 | 👁 all branches | 👁 own branch | 👁 own branch | — |
-| Stock adjustment | — | ✅ approve | ✅ approve (not own) | 🔹 request | — |
+| Stock adjustment | — | ✅ record & approve | ✅ record & approve (not own) | 🔹 record (large decreases need approval) | — |
 | Block / unblock batch | — | ✅ | ✅ | — | — |
 | POS billing & payments | — | 🔹 | ✅ | ✅ | — |
 | Manual discount | — | ✅ | ✅ up to manager limit | 🔹 up to staff limit | — |
@@ -179,7 +179,7 @@ Legend: ✅ full · 🔹 limited (see note) · 👁 view only · — no access
 
 | Candidate role | Reason not added in MVP | Revisit |
 |----------------|-------------------------|---------|
-| CASHIER vs BAKER (split of BRANCH_STAFF) | One staff role is simpler. Small branches have staff doing both jobs. The permission model allows splitting later. | Post-MVP, if owners ask for it (see OQ-21) |
+| CASHIER vs BAKER (split of BRANCH_STAFF) | One staff role is simpler. Small branches have staff doing both jobs. The permission model allows splitting later. | Post-MVP, if owners ask for it (decided in OQ-21, AS-22) |
 | DELIVERY_AGENT | Delivery is not in the MVP (OQ-05). When it comes, deliveries are done by branch staff (AS-12). | When delivery is enabled |
 | ACCOUNTANT / AUDITOR (read-only finance) | Not in the master prompt. ORG_ADMIN covers it. | Suggestion SG-07 |
 | Custom roles | Adds complexity (role editor, permission UI). Fixed roles meet MVP needs (AS-22). | Post-MVP |

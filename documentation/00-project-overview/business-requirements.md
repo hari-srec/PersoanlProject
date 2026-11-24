@@ -1,6 +1,6 @@
 # BakeFlow – Business Requirements
 
-> **Step:** 1.1 · **Status:** Draft for owner review · **Source:** [master-prompt.md](../master-prompt.md) §1, §4, Appendices A–C
+> **Step:** 1.1 (owner-reviewed) · **Source:** [master-prompt.md](../master-prompt.md) §1, §4, Appendices A–C
 
 ## Table of Contents
 
@@ -73,7 +73,7 @@ Each operation has its own meaning, trigger, permission and ledger record. This 
 | **Stock reservation** | Units are held for a customer order during checkout and until handover. They stay on the shelf but cannot be sold to anyone else. | System (at checkout) | reserved ↑, available ↓, on-hand unchanged | `RESERVE` / `RESERVATION_RELEASE` | 3.5, 3.10 |
 | **Sale** | Units leave the branch to a customer, through a POS bill or an online order handover. | Branch staff / system | on-hand ↓ (and reserved ↓ if the units were reserved) | `SALE_OUT` | 3.8, 3.11 |
 | **Transfer** | Units move from one branch to another in **two separate steps**: dispatch at the source and receipt at the destination. | Branch managers | Source on-hand ↓ at dispatch; destination batch on-hand ↑ at receipt. Any shortfall is recorded as transit loss. | `TRANSFER_OUT` / `TRANSFER_IN` | 3.14 |
-| **Adjustment** | Corrects the system to match a physical count (for example a miscount or data-entry error). It is not a loss event. | Staff requests, manager approves | on-hand ↑ or ↓ with a mandatory reason | `ADJUSTMENT_IN` / `ADJUSTMENT_OUT` | 3.6 |
+| **Adjustment** | Corrects the system to match a physical count (for example a miscount or data-entry error). It is not a loss event. | Staff or manager records; manager approves decreases above 5 units / ₹500 (AS-54) | on-hand ↑ or ↓ with a mandatory reason | `ADJUSTMENT_IN` / `ADJUSTMENT_OUT` | 3.6 |
 | **Wastage** | Units are destroyed or discarded because they expired, were damaged, failed quality checks or were returned. They carry a **cost**. | Branch staff | on-hand ↓, wastage cost recorded | `WASTAGE_OUT` | 3.13 |
 
 **Key clarifications**
@@ -206,7 +206,7 @@ Each rule below gives the rule text from the master prompt, why it matters and h
 
 **Why it matters:** This provides accountability (who gave that discount?), fraud detection and dispute resolution.
 
-**How:** Important actions are written to an audit log with user, time, action, entity and before/after values. Examples are price changes, discount approvals, refunds, adjustments, wastage, user and role changes, and transfers. Audit capture is built in from Phase 2 (see [feature-roadmap.md](feature-roadmap.md)).
+**How:** Important actions are written to an audit log with user, time, action, entity and before/after values. Examples are price changes, discount approvals, refunds, adjustments, wastage, user and role changes, and transfers. The audit framework (`audit_log` table and capture mechanism) is built in **Phase 2**, recording the actor as `system`. Module **3.1** connects it to the real authenticated user, so every MVP module is audited from the start. Every stock adjustment is audited, whether or not it needed approval (AS-54). See [feature-roadmap.md](feature-roadmap.md#phase-2--tech-stack--project-setup).
 
 ---
 
@@ -228,7 +228,7 @@ Each rule below gives the rule text from the master prompt, why it matters and h
 | BR-12 | FR-BR-09 (and every stock-changing FR) | ADR-008 | 3.4–3.14 |
 | BR-13 | FR-BR-09 | ADR-008 | 3.5 |
 | BR-14 | FR-ADM-13, FR-BR-38 | ADR-009 | 3.1, 3.2 |
-| BR-15 | FR-BR-39, FR-ADM-20 | ADR-015 | Phase 2 (capture), 3.15 (viewing) |
+| BR-15 | FR-BR-39, FR-ADM-20 | ADR-015 | Phase 2 (framework), 3.1 (real actor), 3.15 (viewing) |
 
 ---
 

@@ -1,6 +1,6 @@
 # BakeFlow – Non-Functional Requirements
 
-> **Step:** 1.1 · **Status:** Draft for owner review · **Source:** [master-prompt.md](../master-prompt.md) §2, §4, Appendix C
+> **Step:** 1.1 (owner-reviewed) · **Source:** [master-prompt.md](../master-prompt.md) §2, §4, Appendix C
 
 ## Table of Contents
 
@@ -99,7 +99,7 @@ Detailed design is in step 1.7.
 
 | ID | Requirement | Measurable target | Priority | Verified in |
 |----|-------------|-------------------|----------|-------------|
-| NFR-29 | Audit coverage | **100 %** of the audited actions in BR-15 produce an audit record with: who (user ID and role), when (UTC), where (organization, branch), what (action, entity type and ID), and before/after values for changes | Must | Phase 2 onward, 3.15 |
+| NFR-29 | Audit coverage | **100 %** of the audited actions in BR-15 produce an audit record with: who (user ID and role), when (UTC), where (organization, branch), what (action, entity type and ID), and before/after values for changes | Must | Phase 2 (framework, actor `system`), 3.1 (real actor), 3.15 (viewing) |
 | NFR-30 | Tamper resistance | Audit log and stock ledger are **append-only**: the application database user has no UPDATE or DELETE rights on these tables in production | Should | 5 |
 | NFR-31 | Retention | Invoices, credit notes, payments, audit log and stock ledger are kept for **at least 8 years** (covers the GST record-keeping requirement of 72 months from the annual return due date). Notifications are kept for 90 days | Must | 5 |
 

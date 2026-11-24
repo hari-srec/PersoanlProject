@@ -37,17 +37,20 @@ The original brief is [master-prompt.md](master-prompt.md). It is **read-only in
 | Know who can do what | [user-roles-and-personas.md](00-project-overview/user-roles-and-personas.md) |
 | See what is built when | [feature-roadmap.md](00-project-overview/feature-roadmap.md) |
 | Check assumptions and decisions waiting for the owner | [scope-and-assumptions.md](00-project-overview/scope-and-assumptions.md) |
+| See which technologies are used and why | [technology-stack.md](01-technology-stack/technology-stack.md), [technology-justification.md](01-technology-stack/technology-justification.md) |
+| Set up your Mac for development | [development-environment.md](01-technology-stack/development-environment.md) |
+| Follow naming and structure rules | [coding-conventions.md](01-technology-stack/coding-conventions.md) |
 | Understand key technical decisions | [design-decisions.md](02-system-design/design-decisions.md) |
 | Check current progress | [implementation-status.md](09-phase-tracking/implementation-status.md) |
 
-**Suggested reading order for newcomers:** vision → business requirements → roles → functional requirements → roadmap → design decisions.
+**Suggested reading order for newcomers:** vision → business requirements → roles → functional requirements → roadmap → technology stack → coding conventions → design decisions.
 
 ## 3. Official Roadmap Summary
 
 | Phase | Content |
 |-------|---------|
 | **1 – Documentation** | 1.1 Overview, requirements & key decisions · 1.2 Technology stack · 1.3 Database design & data dictionary · 1.4 Business workflows · 1.5 API documentation · 1.6 System design (HLD/LLD) & diagrams · 1.7 Security, testing & deployment · 1.8 Consistency review & completion report |
-| **2 – Tech stack & project setup** | Skeleton, Docker, Flyway, CI |
+| **2 – Tech stack & project setup** | Skeleton, Docker, Flyway, CI, audit framework |
 | **3 – Module implementation** | 3.1 Auth · 3.2 Organization, branches & employees · 3.3 Catalog & pricing · 3.4 Batches & ledger · 3.5 FEFO & concurrency · 3.6 Adjustments, expiry job & alerts · 3.7 Production · 3.8 POS & billing · 3.9 Customer accounts & browsing · 3.10 Cart, checkout, reservation & payment · 3.11 Orders & tracking · 3.12 Discounts & near-expiry offers · 3.13 Wastage · 3.14 Inter-branch transfer · 3.15 Notifications & audit trail · 3.16 Analytics & reports · 3.17 Forecasting · 3.18 Loyalty & reviews |
 | **4 – Advanced engineering** | Redis caching, async events, performance |
 | **5 – Hardening & deployment** | Security hardening, load tests, backups, production deployment |
@@ -61,7 +64,7 @@ documentation/
 ├── README.md                  ← you are here
 ├── master-prompt.md           ← original brief (read-only)
 ├── 00-project-overview/       ← vision, requirements, roles, roadmap, scope   (step 1.1)
-├── 01-technology-stack/       ← stack, tools, environment setup               (step 1.2)
+├── 01-technology-stack/       ← stack, justification, environment, conventions (step 1.2)
 ├── 02-system-design/          ← ADR log (1.1), HLD/LLD & diagrams             (step 1.6)
 ├── 03-database-design/        ← ER diagram, schema, data dictionary           (step 1.3)
 ├── 04-api-documentation/      ← REST API reference per module                 (step 1.5)
@@ -85,7 +88,11 @@ documentation/
 | [User roles and personas](00-project-overview/user-roles-and-personas.md) | 00-project-overview | 1.1 |
 | [Feature roadmap](00-project-overview/feature-roadmap.md) | 00-project-overview | 1.1 |
 | [Scope, assumptions and open questions](00-project-overview/scope-and-assumptions.md) | 00-project-overview | 1.1 |
-| [Design decisions (ADR log)](02-system-design/design-decisions.md) | 02-system-design | 1.1 |
+| [Technology stack](01-technology-stack/technology-stack.md) | 01-technology-stack | 1.2 |
+| [Technology justification](01-technology-stack/technology-justification.md) | 01-technology-stack | 1.2 |
+| [Development environment](01-technology-stack/development-environment.md) | 01-technology-stack | 1.2 |
+| [Coding conventions](01-technology-stack/coding-conventions.md) | 01-technology-stack | 1.2 |
+| [Design decisions (ADR log)](02-system-design/design-decisions.md) | 02-system-design | 1.1, 1.2 |
 | [Implementation status](09-phase-tracking/implementation-status.md) | 09-phase-tracking | 1.1 |
 | [Technical debt register](09-phase-tracking/technical-debt.md) | 09-phase-tracking | 1.1 |
 
@@ -95,7 +102,6 @@ Document names below are indicative. They are confirmed when each step starts.
 
 | Planned content | Folder | Status |
 |-----------------|--------|--------|
-| Technology stack, reasons & alternatives, development environment setup, tools | 01-technology-stack | Planned – created in step 1.2 |
 | ER diagram, database schema, indexing, normalisation, sample data & queries | 03-database-design | Planned – created in step 1.3 |
 | Data dictionary (`data-dictionary.md`) | 03-database-design | Planned – created in step 1.3 |
 | Business workflows (16 processes with sequence diagrams) | 05-business-workflows | Planned – created in step 1.4 |

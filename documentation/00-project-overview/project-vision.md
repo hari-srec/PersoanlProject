@@ -1,6 +1,6 @@
 # BakeFlow – Project Vision
 
-> **Step:** 1.1 · **Status:** Draft for owner review · **Source:** [master-prompt.md](../master-prompt.md) §1, Appendix A, Appendix B
+> **Step:** 1.1 (owner-reviewed) · **Source:** [master-prompt.md](../master-prompt.md) §1, Appendix A, Appendix B
 
 ## Table of Contents
 
@@ -120,7 +120,7 @@ Detailed roles and personas: [user-roles-and-personas.md](user-roles-and-persona
 
 ## 7. Success Measures
 
-The original brief sets no numeric targets. The measures below are **proposals**. Each one is recorded as an assumption in [scope-and-assumptions.md](scope-and-assumptions.md#36-success-measure-assumptions) (AS-40 to AS-47) and needs the owner to confirm it.
+The original brief sets no numeric targets. The measures below were proposed in step 1.1 and **accepted by the owner as targets to review after 3 months live** (OQ-18). Each one is recorded as an assumption in [scope-and-assumptions.md](scope-and-assumptions.md#36-success-measure-assumptions) (AS-40 to AS-47).
 
 | ID | Measure | Proposed target | How it is measured |
 |----|---------|-----------------|--------------------|
